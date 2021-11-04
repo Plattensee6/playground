@@ -34,7 +34,8 @@ public class Main {
                 maxTailLength = Math.max(currentTailLength, maxTailLength);
                 currentTailLength = 0;
                 currentHeadLength++;
-            } else {
+            } 
+            if("I".equals(character)) {
                 maxHeadLength = Math.max(currentHeadLength, maxHeadLength);
                 currentHeadLength = 0;
                 currentTailLength++;
