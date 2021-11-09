@@ -30,6 +30,8 @@ int main()
     int* lengths = getLengthOfSequences(coinFlipsVector);
 
     cout << lengths[0] << endl << lengths[1] << endl;
+    delete[] lengths;
+    return 0;
 }
 
 int* getLengthOfSequences(const vector<char> sequences) {
@@ -51,9 +53,8 @@ int* getLengthOfSequences(const vector<char> sequences) {
                 updateMap(tailSequences, currentTailLength);
                 currentTailLength = 0;
             }
-            if (currentHeadLength > 0 && i == sequences.size() - 1) {
+            if (i == sequences.size() - 1) {
                 updateMap(headSequences, currentHeadLength);
-                currentHeadLength = 0;
             }
         }
 
@@ -64,25 +65,18 @@ int* getLengthOfSequences(const vector<char> sequences) {
                 updateMap(headSequences, currentHeadLength);
                 currentHeadLength = 0;
             }
-            if (currentTailLength > 0 && i == sequences.size() - 1){
+            if (i == sequences.size() - 1){
                 updateMap(tailSequences, currentTailLength);
-                currentTailLength = 0;
             }
         }   
     }
-   
-    int headMaxLength;
-    headMaxLength = getMaxLength(headSequences);
-    int tailMaxLength;
-    tailMaxLength = getMaxLength(tailSequences);
-
-    return new int[] {headMaxLength, tailMaxLength };
+    int* results = new int[] {getMaxLength(headSequences), getMaxLength(tailSequences)};
+    return results;
 }
 
 int getMaxLength(const map<int, int>& temp_map) {
     int maxQuantity = 0, maxLength = 0;
 
-    map<int, int>::iterator it;
     for (const pair<const int, int>& entry : temp_map) {
         int length = entry.first;
         int quantity = entry.second;
@@ -98,7 +92,7 @@ int getMaxLength(const map<int, int>& temp_map) {
     return maxLength;
 }
 
-void updateMap(map<int, int> &map, int currentLength) {
+void updateMap(map<const int, int> &map, int currentLength) {
     if (map.count(currentLength) > 0) {
         int quantity = map.at(currentLength);
         map.at(currentLength) = quantity + 1;
