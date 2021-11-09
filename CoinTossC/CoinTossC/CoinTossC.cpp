@@ -6,8 +6,10 @@
 #include<vector>
 
 using namespace std;
+
 int getMaxLength(const map<int, int>& temp_map);
 int* getLengthOfSequences(const vector<char> sequence);
+void updateMap(map<int, int>& map, int currentLength);
 
 int main()
 {
@@ -43,43 +45,32 @@ int* getLengthOfSequences(const vector<char> sequences) {
     for (int i = 0; i < sequences.size(); i++) {
        
         // Increment the length of the current HEAD subsequence and "close" the previous Tail subsequence.
-        if ('f' == tolower(sequences[i])){
-
+        if ('F' == sequences[i]){
             currentHeadLength++;
-
-            // If there is a tail subsequence put its length and quantity into the proper map.
             if (currentTailLength != 0){
-                // if already exists update its quantity
-                if (tailSequences.count(currentTailLength) != 0){
-                    int quantity = tailSequences.at(currentTailLength);
-                    tailSequences.at(currentTailLength) = quantity + 1;
-                }
-                else { // if not exists create new, quantitiy: 1
-                    tailSequences.insert(pair<int, int>(currentTailLength, 1));
-                }
-                // reset the current length of the Tail subsequence to 0.
+                updateMap(tailSequences, currentTailLength);
                 currentTailLength = 0;
+            }
+            if (currentHeadLength > 0 && i == sequences.size() - 1) {
+                updateMap(headSequences, currentHeadLength);
+                currentHeadLength = 0;
             }
         }
 
         // Increment the length of the current TAIL subsequence and "close" the previous Head subsequence.
-        if ('i' == tolower(sequences[i])) {
-
+        if ('I' == sequences[i]) {
             currentTailLength++;
-
             if (currentHeadLength != 0){
-                if (headSequences.count(currentHeadLength) > 0){
-                    int quantity = headSequences.at(currentHeadLength);
-                    tailSequences.at(currentHeadLength) = quantity + 1;
-                }
-                else {
-                    tailSequences.insert(pair<int, int>(currentHeadLength, 1));
-                }
+                updateMap(headSequences, currentHeadLength);
                 currentHeadLength = 0;
             }
-        }
-        
+            if (currentTailLength > 0 && i == sequences.size() - 1){
+                updateMap(tailSequences, currentTailLength);
+                currentTailLength = 0;
+            }
+        }   
     }
+   
     int headMaxLength;
     headMaxLength = getMaxLength(headSequences);
     int tailMaxLength;
@@ -107,3 +98,12 @@ int getMaxLength(const map<int, int>& temp_map) {
     return maxLength;
 }
 
+void updateMap(map<int, int> &map, int currentLength) {
+    if (map.count(currentLength) > 0) {
+        int quantity = map.at(currentLength);
+        map.at(currentLength) = quantity + 1;
+    }
+    else {
+        map.insert({ currentLength, 1 });
+    }
+}
