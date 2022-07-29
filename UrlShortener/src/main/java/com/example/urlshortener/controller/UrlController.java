@@ -1,38 +1,35 @@
 package com.example.urlshortener.controller;
 
-import com.example.urlshortener.model.LongUrlRequest;
+import com.example.urlshortener.model.UrlRequestDTO;
 import com.example.urlshortener.service.UrlService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 @RestController
-@RequestMapping("/api/")
-@Slf4j
 public class UrlController {
     @Autowired
     private UrlService urlService;
 
-    @PostMapping("/url/encode")
-    public String createShortUrl(@RequestBody LongUrlRequest longUrlRequest) {
-        return urlService.toShortUrlCustom(longUrlRequest);
+    @PostMapping("/create")
+    public String createShortUrl(@RequestBody UrlRequestDTO longUrlRequest) {
+        return urlService.toShortUrl(longUrlRequest);
     }
 
-    @GetMapping("/url/{shortUrl}")
-    public ResponseEntity<Void> getLongUrl(@PathVariable String shortUrl) {
-        String longUrl = urlService.toLongUrl(shortUrl);
-        log.info(longUrl);
+    @GetMapping("/{shortUrl}")
+    public ResponseEntity<Void> getLongUrl(@PathVariable String shortUrl) throws URISyntaxException {
+        URI longUrl = urlService.toLongUrl(shortUrl);
         return ResponseEntity.status(HttpStatus.FOUND)
-                .location(URI.create(longUrl))
+                .location(longUrl)
                 .build();
     }
-    @GetMapping("/url/welcome")
-    public String welcome(){
-        return "welcome";
+    @GetMapping("/test")
+    public String test(){
+        return "test";
     }
 }

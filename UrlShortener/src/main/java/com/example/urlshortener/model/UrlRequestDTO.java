@@ -4,10 +4,11 @@ import com.sun.istack.NotNull;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import java.net.URL;
 
 @Getter
-public class LongUrlRequest {
+public class UrlRequestDTO {
     @NotNull
-    @NotBlank
-    private String longUrl;
+    private URL url;
 }
