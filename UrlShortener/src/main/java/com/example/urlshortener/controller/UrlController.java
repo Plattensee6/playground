@@ -22,7 +22,7 @@ public class UrlController {
     }
 
     @GetMapping("/{shortUrl}")
-    public ResponseEntity<Void> getLongUrl(@PathVariable String shortUrl) throws URISyntaxException {
+    public ResponseEntity<Void> getLongUrl(@PathVariable String shortUrl) {
         URI longUrl = urlService.toLongUrl(shortUrl);
         return ResponseEntity.status(HttpStatus.FOUND)
                 .location(longUrl)
